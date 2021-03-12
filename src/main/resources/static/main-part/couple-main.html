@@ -1,0 +1,63 @@
+<div class="container" id="main_container">
+    <main>
+        <div class="py-5 text-center">
+            <h2>나의 짝꿍</h2>
+        </div>
+
+        <div id="loverStateResult">
+        </div>
+
+        <div class="col-sm-7 mt-5">
+            <table class="table table-hover" id="coupleTable" >
+            </table>
+        </div>
+
+    </main>
+</div>
+
+<div class="modal fade" id="coupleModal" tabindex="-1" aria-labelledby="coupleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="coupleModalLabel">짝꿍 요청하기</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="coupleForm">
+                <div class="modal-body">
+                    <form class="needs-validation" novalidate>
+                        <div class="col-sm-10">
+                            <label for="email" class="form-label">상대방의 Email 주소를 입력해주세요.</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="" value="" required>
+                            <div class="invalid-feedback">
+                                상대방의 Email 주소를 입력해 주세요.
+                            </div>
+                            <div class='form-control-error'></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <a type="button" class="btn btn-primary" id="coupleSubmit">요청</a>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="waiterModal" tabindex="-1" aria-labelledby="waiterModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="waiterModalLabel">요청 확인</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>이 사용자가 나의 짝꿍이 맞나요?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                <a type="button" class="btn btn-primary" id="waiterSubmit">확인</a>
+            </div>
+        </div>
+    </div>
+</div>

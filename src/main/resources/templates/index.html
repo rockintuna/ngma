@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en" class="h-100" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>WelCome to NGMA</title>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/ngma.css}"/>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}"/>
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+
+    
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/sticky-footer-navbar.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/form-validation.css}"/>
+  </head>
+  <body class="d-flex flex-column h-100">
+
+    <header>
+      <!-- Fixed navbar -->
+      <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="http://localhost:8080">NGMA</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+              <li class="nav-item active">
+                <a class="nav-link" aria-current="page" href="http://localhost:8080">Home</a>
+              </li>
+              <div sec:authorize="isAuthenticated()">
+                <li class="nav-item">
+                  <a class="nav-link" type="button" href="http://localhost:8080/logout">로그아웃</a>
+                </li>
+              </div>
+              <div sec:authorize="isAuthenticated()">
+                <li class="nav-item">
+                  <a class="nav-link" type="button" id="schedules" onclick="fetchPageToMain('/main-part/schedules-main.html');loadSchedules()">일정</a>
+                </li>
+              </div>
+              <div sec:authorize="isAuthenticated()">
+                <li class="nav-item">
+                  <a class="nav-link" type="button" id="lover" onclick="fetchPageToMain('/main-part/couple-main.html');loadCoupleState()">짝꿍</a>
+                </li>
+              </div>
+              <div sec:authorize="!isAuthenticated()">
+                <li class="nav-item">
+                  <a class="nav-link" type="button" href="http://localhost:8080/login">로그인</a>
+                </li>
+              </div>
+              <div sec:authorize="!isAuthenticated()">
+                <li class="nav-item">
+                  <a class="nav-link" type="button" id="register" onclick="fetchPageToMain('/main-part/register-account-main.html')">회원 가입</a>
+                </li>
+              </div>
+              <li class="nav-item">
+                <a class="nav-link" type="button" id="info" href="http://localhost:8080/info">INFO</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Begin page content -->
+    <main class="flex-shrink-0" id="main">
+      <div class="container text-center">
+          <img src="/image/pink.jpg" class="rounded" width="260">
+          <h1 class="mt-5">잊지마. 늦지마. 그럴거면 오지마.</h1>
+          <p class="lead">당장 어떤 것을 잊고 싶다면, 기억할 수 있게 적어 두어라.<br>
+            - Edgar Allan Poe</p>
+      </div>
+    </main>
+
+    <footer class="footer mt-auto py-3 bg-light">
+      <div class="container">
+        <span class="text-muted">안녕하십니까요. NGMA입니다요.</span>
+      </div>
+    </footer>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/form-validation.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="/js/ngma.js"></script>
+    <script src="/js/schedule-modal.js"></script>
+    <script src="/js/couple-modal.js"></script>
+  </body>
+</html>

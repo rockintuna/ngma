@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Find My Lover</title>
+</head>
+<body>
+    <div th:if="${userAccount.getAccount().getLoverState() != null}">
+        <h2>상대방으로부터 매칭을 대기중입니다.</h2>
+    </div>
+    <h1>나의 짝꿍 찾기</h1>
+    <form action="/coupling" method="post" th:action="@{/coupling}" th:object="${account}">
+        <input type="text" th:field="*{email}">
+        <button type="submit">선택하기</button>
+    </form>
+</body>
+</html>

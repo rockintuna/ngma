@@ -1,0 +1,27 @@
+POST http://localhost:8080/account
+Content-Type: application/json
+
+{
+  "email": "jilee@example.com",
+  "password": "snrnrp47",
+  "name": "이정인"
+}
+
+###
+GET http://localhost:8080/account/lover
+Content-Type: application/json
+
+{
+  "email": "jilee@example.com",
+  "password": "snrnrp47"
+}
+
+
+###
+POST http://localhost:8080/session
+Content-Type: application/json
+
+{
+  "email": "jilee@example.com",
+  "password": "snrnrp47"
+}

@@ -1,0 +1,82 @@
+    <div class="container" id="main_container">
+      <main>
+        <div class="py-5 text-center">
+          <h2>일정</h2>
+        </div>
+
+        <table class="table table-hover">
+          <thead>
+          <tr>
+            <th scope="col"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2-square" viewBox="0 0 16 16">
+              <path d="M3 14.5A1.5 1.5 0 0 1 1.5 13V3A1.5 1.5 0 0 1 3 1.5h8a.5.5 0 0 1 0 1H3a.5.5 0 0 0-.5.5v10a.5.5 0 0 0 .5.5h10a.5.5 0 0 0 .5-.5V8a.5.5 0 0 1 1 0v5a1.5 1.5 0 0 1-1.5 1.5H3z"/>
+              <path d="M8.354 10.354l7-7a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0z"/>
+            </svg></th>
+            <th scope="col">When</th>
+            <th scope="col">Where</th>
+            <th scope="col">What</th>
+            <th scope="col">Together or Alone</th>
+            <th scope="col"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+              <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+              <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+              </svg></th>
+          </tr>
+          </thead>
+          <tbody id="scheduleTable">
+          </tbody>
+        </table>
+        <a class="btn btn-outline-primary" type="button" id="schedule" data-bs-toggle="modal" data-bs-target="#newScheduleModal">새로운 일정 추가하기</a>
+      </main>
+    </div>
+
+    <div class="modal fade" id="newScheduleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">일정 등록</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form id="scheduleForm">
+            <div class="modal-body">
+              <form class="needs-validation" novalidate>
+                <div class="col-sm-6">
+                  <label for="title" class="form-label">제목</label>
+                  <input type="text" class="form-control" id="title" name="title" placeholder="" value="" required>
+                  <div class="invalid-feedback">
+                    제목을 입력해 주세요.
+                  </div>
+                </div>
+
+                <div class="col-sm-6">
+                  <label for="date" class="form-label">날짜</label>
+                  <input type="datetime-local" class="form-control" id="date" name="dateTime" placeholder="" value="" required>
+                  <div class="invalid-feedback">
+                    날짜를 입력해 주세요.
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <label for="place" class="form-label">장소</label>
+                  <div class="input-group">
+                    <input type="text" class="form-control" id="place" name="place" placeholder="" required>
+                    <div class="invalid-feedback">
+                      장소를 입력해 주세요.
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-check">
+                  <input class="form-check-input" id="personal" name="personal" type="checkbox" value="true">
+                  <label class="form-check-label" for="personal">
+                    Is Personal?
+                  </label>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+              <a type="submit" class="btn btn-primary" id="scheduleSubmit">등록</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>

@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en" class="h-100" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WelCome to NGMA</title>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="../static/css/bootstrap.min.css"/>
+
+  <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+  </style>
+
+  <!-- Custom styles for this template -->
+  <link rel="stylesheet" type="text/css" href="../static/css/sticky-footer-navbar.css"/>
+  <link rel="stylesheet" type="text/css" href="../static/css/form-validation.css"/>
+</head>
+<body class="d-flex flex-column h-100">
+
+  <header>
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">NGMA</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul class="navbar-nav me-auto mb-2 mb-md-0">
+            <li class="nav-item active">
+              <a class="nav-link" aria-current="page" href="http://localhost:8080">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="http://localhost:8080/login">로그인</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="http://localhost:8080/account">회원가입</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" type="button" id="schedules" onclick="loadSchedules()">일정</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="http://localhost:8080/couple">짝꿍</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="http://localhost:8080/info">INFO</a>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="flex-shrink-0" id="main">
+    <div class="container" id="main_container">
+      <main>
+        <div class="py-5 text-center">
+          <h2>일정</h2>
+        </div>
+
+        <table class="table table-hover">
+          <thead>
+          <tr>
+            <th scope="col">When</th>
+            <th scope="col">Where</th>
+            <th scope="col">What</th>
+            <th scope="col">Together or Alone</th>
+          </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+        <!-- <a class="btn btn-outline-primary" type="button" id="schedule" onclick="fetchPage('/css/newschedule-main')">새로운 일정 추가하기</a> -->
+        <a class="btn btn-outline-primary" type="button" id="schedule" data-bs-toggle="modal" data-bs-target="#newScheduleModal">새로운 일정 추가하기</a>
+      </main>
+    </div>
+
+    <div class="modal fade" id="newScheduleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">일정 등록</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form action="/schedule" method="post" th:action="@{/schedule}" th:object="${schedule}">
+            <div class="modal-body">
+              <form class="needs-validation" novalidate>
+                <div class="col-sm-6">
+                  <label for="title" class="form-label">제목</label>
+                  <input type="text" class="form-control" id="title" th:field="*{title}" placeholder="" value="" required>
+                  <div class="invalid-feedback">
+                    제목을 입력해 주세요.
+                  </div>
+                </div>
+
+                <div class="col-sm-6">
+                  <label for="date" class="form-label">날짜</label>
+                  <input type="datetime-local" class="form-control" id="date" th:field="*{dateTime}" placeholder="" value="" required>
+                  <div class="invalid-feedback">
+                    날짜를 입력해 주세요.
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <label for="place" class="form-label">장소</label>
+                  <div class="input-group">
+                    <input type="text" class="form-control" id="place" th:field="*{place}" placeholder="" required>
+                    <div class="invalid-feedback">
+                      장소를 입력해 주세요.
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="personal" th:field="*{personal}">
+                  <label class="form-check-label" for="personal">
+                    Alone?
+                  </label>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+              <button type="button" class="btn btn-primary" th:type="submit" >등록</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+  </main>
+
+  <footer class="footer mt-auto py-3 bg-light">
+    <div class="container">
+      <span class="text-muted">안녕하십니까요 NGMA입니다요.</span>
+    </div>
+  </footer>
+
+  <script src="../static/js/bootstrap.bundle.min.js"></script>
+  <script src="../static/js/form-validation.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>
+    function loadSchedules() {
+      var schedules = [{"id":1,"dateTime":"2021-02-18T20:30:00","title":"치맥","place":"강남","personal":false}];
+
+      $.each(schedules, function (i, item) {
+        var tr = $("tbody#schedule").append("<tr></tr>")
+        $(tr).append("<td>"+item.dateTime+"</td>");
+        $(tr).append("<td>"+item.place+"</td>");
+        $(tr).append("<td>"+item.title+"</td>");
+        $(tr).append("<td>"+item.personal+"</td>");
+      })
+    }
+  </script>
+</body>
+</html>

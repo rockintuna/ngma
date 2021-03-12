@@ -1,0 +1,23 @@
+a {
+    color:black;
+    text-decoration: none;
+}
+body {
+    margin: 0px;
+}
+h1 {
+    border-bottom: solid black 3px;
+    padding: 20px;
+    margin: 0px;
+}
+#grid {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+}
+#grid nl {
+    border-right: solid black 3px;
+    padding: 15px;
+}
+#grid #content {
+    padding: 15px;
+}
