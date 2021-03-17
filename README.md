@@ -1,22 +1,22 @@
 # ngma
 커플용 웹기반 스케쥴러
 
-- 기술 스택  
+### 기술 스택  
 
-maven  
-Java  
-Spring Boot  
-JPA  
-Spring Security   
-Thymeleaf  
-JavaScript  
-Jquery  
-Ajax  
-BootStrap  
-Mysql  
-H2 DB(for test)  
+- maven  
+- Java  
+- Spring Boot  
+- JPA  
+- Spring Security   
+- Thymeleaf  
+- JavaScript  
+- Jquery  
+- Ajax  
+- BootStrap  
+- Mysql  
+- H2 DB(for test)  
 
-- 프로젝트 설치하는 방법
+### 프로젝트 설치하는 방법
 
 **MYSQL DB 타임존 설정 및 DB 생성, 유저 생성, 권한 부여**
 ```
@@ -62,7 +62,7 @@ Resolving deltas: 100% (38/38), done.
 
 ![image](https://user-images.githubusercontent.com/52302236/111489605-a000c980-877d-11eb-91e9-1f02abe06d4f.png)
 
-- 프로젝트 기능 설명
+### 프로젝트 기능 설명
 
 **회원가입 후 로그인하면 일정/짝꿍/계정변경 탭이 활성화된다.**
 
