@@ -15,19 +15,34 @@ public class ScheduleController {
     @Autowired
     private ScheduleService scheduleService;
 
-    @ResponseBody
     @GetMapping("/schedules")
+    @ResponseBody
     public List<Schedule> getSchedules(@AuthenticationPrincipal UserAccount userAccount) {
-        List<Schedule> schedules = scheduleService.getSchedules(userAccount.getAccount());
+        List<Schedule> schedules = scheduleService.getSchedules(userAccount);
         return schedules;
     }
 
-    @ResponseBody
     @PostMapping("/schedule")
-    public ResponseEntity<?> createSchedulexSubmit(@ModelAttribute Schedule schedule,
-                                       @AuthenticationPrincipal UserAccount userAccount) {
-        scheduleService.createSchedule(schedule, userAccount.getAccount());
-        return ResponseEntity.ok().build();
+    @ResponseBody
+    public ResponseEntity<?> createSchedule(@RequestBody ScheduleDto scheduleDto,
+                                            @AuthenticationPrincipal UserAccount userAccount) {
+        scheduleService.createSchedule(scheduleDto, userAccount);
+        return ResponseEntity.ok("{}");
     }
 
+    @PostMapping("/schedule/modify")
+    @ResponseBody
+    public ResponseEntity<?> modifySchedule(@RequestBody ScheduleDto scheduleDto) {
+        scheduleService.modifySchedule(scheduleDto.getId(), scheduleDto);
+        return ResponseEntity.ok("{}");
+    }
+
+    @DeleteMapping("/schedule")
+    @ResponseBody
+    public ResponseEntity<?> deleteSchedule(@RequestBody Long[] scheduleIdList) {
+        for (Long id : scheduleIdList) {
+            scheduleService.deleteSchedule(id);
+        }
+        return ResponseEntity.ok("{}");
+    }
 }

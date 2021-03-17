@@ -1,0 +1,68 @@
+<div class="container" id="main_container">
+    <main>
+        <div class="py-5 text-center">
+            <h2>회원 정보 변경</h2>
+        </div>
+
+        <div class="col-md-7 col-lg-8">
+            <h4 class="mb-3">정보 입력</h4>
+            <form class="needs-validation" id="accountModifyForm" novalidate>
+
+                <div class="col-sm-6">
+                    <label for="firstName" class="form-label">이름</label>
+                    <input type="text" class="form-control" id="firstName" name="name" placeholder="" value="" required>
+                    <div class="invalid-feedback">
+                        새로운 이름을 입력해 주세요.
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <label for="firstName" class="form-label">비밀번호</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="" value="" required>
+                    <div class="invalid-feedback">
+                        사용할 비밀번호를 입력해 주세요.
+                    </div>
+                </div>
+                <hr class="my-4 center">
+                <a class="btn btn-primary" type="button"data-bs-toggle="modal" data-bs-target="#accountModifyModal">계정변경</a>
+                <a class="btn btn-secondary" type="button"data-bs-toggle="modal" data-bs-target="#accountDeleteModal">계정삭제</a>
+            </form>
+        </div>
+    </main>
+</div>
+
+<div class="modal fade" id="accountModifyModal" tabindex="-1" aria-labelledby="accountModifyModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="accountModifyModalLabel">요청 확인</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>정말 변경하시겠습니까?</p>
+            </div>
+            <div class="modal-footer">
+                <a type="button" class="btn btn-primary" id="accountModify">확인</a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="accountDeleteModal" tabindex="-1" aria-labelledby="accountDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="accountDeleteModalLabel">요청 확인</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>정말 삭제하시겠습니까?</p>
+            </div>
+            <div class="modal-footer">
+                <a type="button" class="btn btn-primary" id="accountDelete">확인</a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+            </div>
+        </div>
+    </div>
+</div>

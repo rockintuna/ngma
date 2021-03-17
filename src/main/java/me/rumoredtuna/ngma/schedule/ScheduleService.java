@@ -1,32 +1,61 @@
 package me.rumoredtuna.ngma.schedule;
 
 import me.rumoredtuna.ngma.account.Account;
+import me.rumoredtuna.ngma.account.AccountService;
 import me.rumoredtuna.ngma.account.LoverState;
+import me.rumoredtuna.ngma.account.UserAccount;
+import me.rumoredtuna.ngma.config.exceptions.NotExistDataException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@Transactional
 public class ScheduleService {
 
     @Autowired
     private ScheduleRepository scheduleRepository;
 
-    public List<Schedule> getSchedules(Account account) {
-        if ( account.getLoverState() == LoverState.COUPLED) {
-            return scheduleRepository.findAllByCouple(account.getId());
+    @Autowired
+    private AccountService accountService;
+
+    public Schedule getSchedule(Long id) {
+        return scheduleRepository.findById(id).orElseThrow(NotExistDataException::new);
+    }
+
+    public List<Schedule> getSchedules(UserAccount userAccount) {
+        if ( accountService.getUserById(userAccount.getAccountId()).getLoverState()
+                == LoverState.COUPLED) {
+            return scheduleRepository.findAllByCouple(userAccount.getAccountId());
         } else {
-            return scheduleRepository.findAllByOwner(account.getId());
+            return scheduleRepository.findAllByOwner(userAccount.getAccountId());
         }
     }
 
-//    public List<Schedule> getOurSchedules(Long accountId) {
-//        return scheduleRepository.findAllByCouple(accountId);
-//    }
-
-    public Schedule createSchedule(Schedule schedule, Account account) {
-        schedule.setOwner(account);
+    public Schedule createSchedule(ScheduleDto scheduleDto, UserAccount userAccount) {
+        Schedule schedule = new Schedule(scheduleDto);
+        schedule.setOwner(accountService.getUserById(userAccount.getAccountId()));
         return scheduleRepository.save(schedule);
+    }
+
+    public void clearSchedule(Account account) {
+        List<Schedule> scheduleList = scheduleRepository.findAllByOwner(account.getId());
+        for (Schedule schedule : scheduleList) {
+            scheduleRepository.delete(schedule);
+        }
+    }
+
+    public Schedule modifySchedule(Long id, ScheduleDto scheduleDto) {
+        Schedule schedule = getSchedule(id);
+        schedule.modifyByDto(scheduleDto);
+        return schedule;
+    }
+
+    public void deleteSchedule(Long id) {
+        scheduleRepository.deleteById(id);
     }
 }

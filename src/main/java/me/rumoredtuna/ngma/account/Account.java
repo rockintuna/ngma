@@ -2,6 +2,7 @@ package me.rumoredtuna.ngma.account;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 public class Account {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,9 +31,6 @@ public class Account {
     private String name;
 
     private String role;
-
-    public Account() {
-    }
 
     public Account(AccountDto accountDto) {
         this.email = accountDto.getEmail();

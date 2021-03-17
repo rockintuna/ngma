@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.test.context.support.TestExecutionEvent;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
@@ -18,7 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -120,7 +123,7 @@ class AccountControllerTest {
     @WithUserDetails(value = "jilee@example.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     public void modifyAccount() throws Exception {
         AccountDto accountDto = new AccountDto();
-        accountDto.setName("jilee");
+        accountDto.setName("jileee");
         accountDto.setPassword("jilee321");
         String accountDtoJson = objectMapper.writeValueAsString(accountDto);
 
@@ -131,9 +134,21 @@ class AccountControllerTest {
                 .andExpect(status().is3xxRedirection());
 
         assertThat(accountService.getUserByEmail("jilee@example.com").getName())
-                .isEqualTo("jilee");
+                .isEqualTo("jileee");
         assertThat(accountService.getUserByEmail("jilee@example.com").getPassword())
                 .isNotNull();
+    }
+
+    @Test
+    @WithUserDetails(value = "jilee@example.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    public void deleteAccount() throws Exception {
+        mvc.perform(delete("/account/delete"))
+                .andDo(print())
+                .andExpect(status().is3xxRedirection());
+
+        assertThrows(UsernameNotFoundException.class, () -> {
+            accountService.getUserByEmail("jilee@example.com");
+        });
     }
 
     @Test

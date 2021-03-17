@@ -17,12 +17,12 @@ public class GlobalController {
 
     @ExceptionHandler
     public ResponseEntity<?> usedEmailExceptionHandler(UsedEmailException exception) {
-        return ResponseEntity.badRequest().body("can't create account, because of used email.");
+        return ResponseEntity.badRequest().body("사용중인 메일 주소 입니다.");
     }
 
     @ExceptionHandler
     public ResponseEntity<?> invalidPasswordExceptionHandler(InvalidPasswordException exception) {
-        return ResponseEntity.badRequest().body("can't create account, because of password.");
+        return ResponseEntity.badRequest().body("패스워드는 8자 이상이어야 합니다.");
     }
 
     @ExceptionHandler
@@ -32,11 +32,16 @@ public class GlobalController {
 
     @ExceptionHandler
     public ResponseEntity<?> passwordWrongException(PasswordWrongException exception) {
-        return ResponseEntity.badRequest().body("wrong password");
+        return ResponseEntity.badRequest().body("잘못된 패스워드 입니다.");
     }
 
     @ExceptionHandler
     public ResponseEntity<?> pickMySelfException(PickMySelfException exception) {
         return ResponseEntity.badRequest().body("자신은 짝꿍이 될 수 없어요..");
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<?> notExistDataException(NotExistDataException exception) {
+        return ResponseEntity.badRequest().body("데이터가 존재하지 않습니다.");
     }
 }

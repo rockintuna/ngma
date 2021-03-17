@@ -1,9 +1,7 @@
 package me.rumoredtuna.ngma.schedule;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import me.rumoredtuna.ngma.account.Account;
-import me.rumoredtuna.ngma.account.AccountDto;
-import me.rumoredtuna.ngma.account.AccountService;
+import me.rumoredtuna.ngma.account.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +26,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -48,6 +48,9 @@ class ScheduleControllerTest {
     private ScheduleService scheduleService;
 
     @Autowired
+    private ScheduleRepository scheduleRepository;
+
+    @Autowired
     private ObjectMapper objectMapper;
 
     @BeforeEach
@@ -57,15 +60,27 @@ class ScheduleControllerTest {
         account.setEmail("jilee@example.com");
         account.setPassword("jilee123");
         Account newAccount = accountService.registerAccount(account);
+        UserAccount userAccount = new UserAccount(newAccount);
+
+        AccountDto account2 = new AccountDto();
+        account2.setEmail("sjlee@example.com");
+        account2.setPassword("sjlee123");
+        Account lover = accountService.registerAccount(account2);
+
+        newAccount.setLover(lover);
+        lover.setLover(newAccount);
+        newAccount.setLoverState(LoverState.COUPLED);
+        lover.setLoverState(LoverState.COUPLED);
 
         Schedule schedule1 = new Schedule();
         schedule1.setTitle("book");
+        schedule1.setOwner(newAccount);
+        scheduleRepository.save(schedule1);
 
         Schedule schedule2 = new Schedule();
         schedule2.setTitle("cafe");
-
-        scheduleService.createSchedule(schedule1, newAccount);
-        scheduleService.createSchedule(schedule2, newAccount);
+        schedule2.setOwner(newAccount);
+        scheduleRepository.save(schedule2);
     }
 
     @Test
@@ -79,20 +94,30 @@ class ScheduleControllerTest {
     }
 
     @Test
+    @WithUserDetails(value = "sjlee@example.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    public void getOurSchedules() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/schedules")).andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(authenticated())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().string(containsString("cafe")));
+    }
+
+    @Test
     @WithUserDetails(value = "jilee@example.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     public void createSchedule() throws Exception {
 
+        ScheduleDto scheduleDto = new ScheduleDto();
+        scheduleDto.setTitle("meeting");
+        String scheduleDtoString = objectMapper.writeValueAsString(scheduleDto);
+
         mvc.perform(post("/schedule")
-                .param("title", "cook"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(scheduleDtoString))
                 .andDo(print())
                 .andExpect(status().isOk());
 
-        Account account = accountService.getUserByEmail("jilee@example.com");
-
-        assertThat(scheduleService.getSchedules(account)
-                .size()).isEqualTo(3);
-        assertThat(scheduleService.getSchedules(account)
-                .get(2).getTitle()).isEqualTo("cook");
+        assertThat(scheduleService.getSchedule(3l).getTitle()).isEqualTo("meeting");
     }
 
     @Test
@@ -101,5 +126,37 @@ class ScheduleControllerTest {
                 .param("title", "cook"))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithUserDetails(value = "jilee@example.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    public void modifySchedule() throws Exception {
+        ScheduleDto scheduleDto = new ScheduleDto();
+        scheduleDto.setId(1l);
+        scheduleDto.setTitle("meeting");
+        String scheduleDtoString = objectMapper.writeValueAsString(scheduleDto);
+
+        mvc.perform(post("/schedule/modify")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(scheduleDtoString))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        assertThat(scheduleService.getSchedule(1l).getTitle()).isEqualTo("meeting");
+    }
+
+    @Test
+    @WithUserDetails(value = "jilee@example.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    public void deleteSchedule() throws Exception {
+        Long[] scheduleIdList = new Long[2];
+        scheduleIdList[0] = 1L;
+        scheduleIdList[1] = 2L;
+        System.out.println(scheduleIdList);
+
+        mvc.perform(delete("/schedule")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Arrays.toString(scheduleIdList)))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 }

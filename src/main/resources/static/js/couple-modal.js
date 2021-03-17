@@ -3,6 +3,9 @@ $(document).ready(function () {
         submitCoupleForm();
         return false;
     });
+    $(document).on("click","[data-bs-dismiss='modal']",function (event) {
+        $(".form-control-error").empty();
+    });
 });
 
 function submitCoupleForm(){
@@ -24,9 +27,3 @@ function submitCoupleForm(){
         }
     });
 }
-
-$(document).ready(function () {
-    $(document).on("click","[data-bs-dismiss='modal']",function (event) {
-        $(".form-control-error").empty();
-    });
-});

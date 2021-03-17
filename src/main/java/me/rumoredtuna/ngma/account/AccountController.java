@@ -29,6 +29,13 @@ public class AccountController {
         return "redirect:/login";
     }
 
+    @DeleteMapping("/delete")
+    @ResponseBody
+    public ResponseEntity<?> delete(@AuthenticationPrincipal UserAccount userAccount) {
+        accountService.deleteAccount(userAccount);
+        return ResponseEntity.ok("{}");
+    }
+
     @GetMapping("/loverState")
     @ResponseBody
     public LoverState getLoverState(@AuthenticationPrincipal UserAccount userAccount) {

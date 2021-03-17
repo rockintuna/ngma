@@ -1,8 +1,8 @@
 package me.rumoredtuna.ngma.schedule;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import me.rumoredtuna.ngma.account.Account;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 public class Schedule {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,5 +33,19 @@ public class Schedule {
     private Account owner;
 
     private boolean personal;
+
+    public Schedule(ScheduleDto scheduleDto) {
+        this.dateTime = scheduleDto.getDateTime();
+        this.title = scheduleDto.getTitle();
+        this.place = scheduleDto.getPlace();
+        this.personal = scheduleDto.isPersonal();
+    }
+
+    public void modifyByDto(ScheduleDto scheduleDto) {
+        this.dateTime = scheduleDto.getDateTime();
+        this.title = scheduleDto.getTitle();
+        this.place = scheduleDto.getPlace();
+        this.personal = scheduleDto.isPersonal();
+    }
 
 }

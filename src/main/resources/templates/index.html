@@ -61,6 +61,11 @@
                   <a class="nav-link" type="button" id="lover" onclick="fetchPageToMain('/main-part/couple-main.html');loadCoupleState()">짝꿍</a>
                 </li>
               </div>
+              <div sec:authorize="isAuthenticated()">
+                <li class="nav-item">
+                  <a class="nav-link" type="button" id="modifyAccount" onclick="fetchPageToMain('/main-part/modify-account-main.html')">계정변경</a>
+                </li>
+              </div>
               <div sec:authorize="!isAuthenticated()">
                 <li class="nav-item">
                   <a class="nav-link" type="button" href="http://localhost:8080/login">로그인</a>

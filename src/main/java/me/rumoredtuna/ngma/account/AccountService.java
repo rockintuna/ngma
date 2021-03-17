@@ -4,6 +4,7 @@ import me.rumoredtuna.ngma.config.exceptions.InvalidPasswordException;
 import me.rumoredtuna.ngma.config.exceptions.PasswordWrongException;
 import me.rumoredtuna.ngma.config.exceptions.PickMySelfException;
 import me.rumoredtuna.ngma.config.exceptions.UsedEmailException;
+import me.rumoredtuna.ngma.schedule.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,7 +24,11 @@ public class AccountService implements UserDetailsService {
     private AccountRepository accountRepository;
 
     @Autowired
+    private ScheduleService scheduleService;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
+
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -62,16 +67,25 @@ public class AccountService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(email));
     }
 
-    public void deleteAccount(Account account) {
-        accountRepository.deleteById(account.getId());
+    public void deleteAccount(UserAccount userAccount) {
+        Account account = getUserById(userAccount.getAccountId());
+        if ( account.getLoverState() == LoverState.COUPLED ) {
+            account.getLover().setLover(null);
+            account.getLover().setLoverState(LoverState.NOTHING);
+        }
+        clearWaiter(account);
+        scheduleService.clearSchedule(account);
+        accountRepository.deleteById(userAccount.getAccountId());
     }
 
     public void modifyAccount(UserAccount userAccount, AccountDto accountDto) {
+        checkPasswordIsNullOrShort(accountDto);
 
         Account account = accountRepository.findByEmail(userAccount.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException(userAccount.getUsername()));
         account.modifyByDto(accountDto);
         account.encodePassword(passwordEncoder);
+        accountRepository.save(account);
     }
 
     public Account getLover(UserAccount userAccount) {
