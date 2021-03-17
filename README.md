@@ -27,7 +27,9 @@ grant all privileges on ngma.* to ngma@localhost;
 ```
 
 만약 아래와 같은 에러 메시지로 타임존 설정이 안될 경우
-ERROR 1298 (HY000): Unknown or incorrect time zone: 'Asia/Seoul'
+
+```ERROR 1298 (HY000): Unknown or incorrect time zone: 'Asia/Seoul'```
+
 https://dev.mysql.com/downloads/timezones.html 에서 sql 파일을 받아 실행한 뒤 다시 시도한다.
 ```
 use mysql;
