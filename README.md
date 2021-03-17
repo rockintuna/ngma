@@ -95,7 +95,8 @@ Resolving deltas: 100% (38/38), done.
 
 ![image](https://user-images.githubusercontent.com/52302236/111494421-c9235900-8781-11eb-923d-c6dca37f8cd1.png)
 
-상대방에게는 받은 모든 요청이 보여진다. 요청을 확인 또는 거절할 수 있다.
+사용자는 다른 사람으로부터 받은 모든 요청을 확인할 수 있다. 요청을 허가 또는 거절할 수 있다. 
+요청을 허락하면 서로 짝꿍이 되며 모든 다른 요청이 자동으로 거절된다.
 
 ![image](https://user-images.githubusercontent.com/52302236/111494581-f07a2600-8781-11eb-9fa2-916db43d5630.png)
 
