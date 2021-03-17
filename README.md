@@ -70,18 +70,39 @@ Resolving deltas: 100% (38/38), done.
 
 **일정기능에서는 나의 또는 내 짝꿍의 일정을 확인하거나 추가 또는 변경 및 제거할 수 있다.**
 
-![image](https://user-images.githubusercontent.com/52302236/111489966-f837cb80-877d-11eb-8265-e933f90b74cd.png)
+일정 확인
 
-![image](https://user-images.githubusercontent.com/52302236/111490229-2f0de180-877e-11eb-8057-aba12982a28f.png)
+![image](https://user-images.githubusercontent.com/52302236/111492610-27e7d300-8780-11eb-8866-9644960a2b50.png)
+
+일정 추가
+
+![image](https://user-images.githubusercontent.com/52302236/111494013-7184ed80-8781-11eb-9317-0f7316126a6a.png)
+
+일정 변경 및 제거
+
+![image](https://user-images.githubusercontent.com/52302236/111493812-41d5e580-8781-11eb-889d-86d4b38dbe07.png)
+
 
 **짝꿍 기능에서는 다른 사람에게 짝꿍을 신청하거나 나의 짝꿍을 확인 또는 다른 사람으로 부터의 신청 내역을 확인할 수 있다.**
 
-![image](https://user-images.githubusercontent.com/52302236/111490386-54025480-877e-11eb-9da6-a525c6592a20.png)
+![image](https://user-images.githubusercontent.com/52302236/111494185-9bd6ab00-8781-11eb-8a54-e7b35355b096.png)
 
-![image](https://user-images.githubusercontent.com/52302236/111490430-5d8bbc80-877e-11eb-8e9a-846cd09bb0f7.png)
+상대방의 메일 주소를 입력한 뒤 요청하면 
 
-![image](https://user-images.githubusercontent.com/52302236/111490479-67152480-877e-11eb-8f36-2c103878339c.png)
+![image](https://user-images.githubusercontent.com/52302236/111494236-a729d680-8781-11eb-8916-a844c6ed6a19.png)
 
-![image](https://user-images.githubusercontent.com/52302236/111490565-7a27f480-877e-11eb-84fe-40c20431d930.png)
+나는 대기상태로 변환하고 대기 중 요청을 취소할 수 있다.
+
+![image](https://user-images.githubusercontent.com/52302236/111494421-c9235900-8781-11eb-923d-c6dca37f8cd1.png)
+
+상대방에게는 받은 모든 요청이 보여진다. 요청을 확인 또는 거절할 수 있다.
+
+![image](https://user-images.githubusercontent.com/52302236/111494581-f07a2600-8781-11eb-9fa2-916db43d5630.png)
+
+짝꿍이 되면 서로의 일정을 확인할 수 있다.
+
+![image](https://user-images.githubusercontent.com/52302236/111494733-11427b80-8782-11eb-91b6-adfba99b2645.png)
+
+![image](https://user-images.githubusercontent.com/52302236/111494792-1e5f6a80-8782-11eb-8911-236f219b12ec.png)
 
 - 업데이트
