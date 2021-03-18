@@ -36,7 +36,7 @@ public class AfterInit implements ApplicationRunner {
 
         AccountDto account1 = new AccountDto();
         account1.setEmail("jilee@example.com");
-        account1.setPassword("snrnrp47");
+        account1.setPassword("jilee321");
         account1.setName("이정인");
         Account account = accountService.registerAccount(account1);
 
