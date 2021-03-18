@@ -40,13 +40,15 @@ public class AfterInit implements ApplicationRunner {
         account1.setName("이정인");
         Account account = accountService.registerAccount(account1);
 
-        Schedule schedule = new Schedule();
-        schedule.setTitle("치맥");
-        schedule.setDateTime(LocalDateTime.now());
-        schedule.setPlace("강남");
-        schedule.setOwner(account);
-        schedule.setOwner(accountService.getUserById(account.getId()));
-        scheduleRepository.save(schedule);
+        for (int i=1; i<100; i++) {
+            Schedule schedule = new Schedule();
+            schedule.setTitle("일정"+i);
+            schedule.setDateTime(LocalDateTime.now());
+            schedule.setPlace("강남");
+            schedule.setOwner(account);
+            schedule.setOwner(accountService.getUserById(account.getId()));
+            scheduleRepository.save(schedule);
+        }
 
         AccountDto account2 = new AccountDto();
         account2.setEmail("sjlee@example.com");

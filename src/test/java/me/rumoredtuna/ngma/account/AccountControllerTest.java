@@ -82,7 +82,7 @@ class AccountControllerTest {
                 .content(accountDtoJson))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("can't create account, because of password."))
+                .andExpect(content().string("패스워드는 8자 이상이어야 합니다."))
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof InvalidPasswordException));
     }
 
@@ -97,7 +97,7 @@ class AccountControllerTest {
                 .content(accountDtoJson))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("can't create account, because of password."))
+                .andExpect(content().string("패스워드는 8자 이상이어야 합니다."))
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof InvalidPasswordException));
     }
 
@@ -113,7 +113,7 @@ class AccountControllerTest {
                 .content(accountDtoJson))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("can't create account, because of used email."))
+                .andExpect(content().string("사용중인 메일 주소 입니다."))
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof UsedEmailException));
 
         assertThat(accountService.getUserByEmail("jilee@example.com")).isNotNull();
@@ -144,7 +144,7 @@ class AccountControllerTest {
     public void deleteAccount() throws Exception {
         mvc.perform(delete("/account/delete"))
                 .andDo(print())
-                .andExpect(status().is3xxRedirection());
+                .andExpect(status().isOk());
 
         assertThrows(UsernameNotFoundException.class, () -> {
             accountService.getUserByEmail("jilee@example.com");
@@ -361,7 +361,7 @@ class AccountControllerTest {
         assertThat(account.getLoverState().getHasWaiters()).isEqualTo(true);
         assertThat(account.getWaiters()).isNotEmpty();
 
-        mvc.perform(post("/account/waiter/"+lover.getId())
+        mvc.perform(post("/account/waiter/" + lover.getId())
                 .param("param", "confirm"))
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -387,13 +387,31 @@ class AccountControllerTest {
         assertThat(account.getWaiters().contains(lover)).isTrue();
         assertThat(account.getWaiters()).isNotEmpty();
 
-        mvc.perform(post("/account/waiter/"+lover.getId())
+        mvc.perform(post("/account/waiter/" + lover.getId())
                 .param("param", "reject"))
                 .andDo(print())
                 .andExpect(status().isOk());
 
         assertThat(lover.getLoverState()).isEqualTo(LoverState.NOTHING);
         assertThat(account.getWaiters().contains(lover)).isFalse();
+    }
+
+    @Test
+    @WithUserDetails(value = "jilee@example.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    public void cancelLover() throws Exception {
+        Account account = accountService.getUserByEmail("jilee@example.com");
+        Account lover = accountService.getUserByEmail("sjlee@example.com");
+        account.setLover(lover);
+        lover.setLover(account);
+        account.setLoverState(LoverState.COUPLED);
+        lover.setLoverState(LoverState.COUPLED);
+
+        mvc.perform(post("/account/lover/cancel"))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        assertThat(lover.getLoverState()).isEqualTo(LoverState.NOTHING);
+        assertThat(account.getLoverState()).isEqualTo(LoverState.NOTHING);
     }
 
 }

@@ -88,16 +88,47 @@ function deleteAccountForm(){
     });
 }
 
-function loadSchedules() {
+function printSchedules(pageNum) {
     $.ajax({
-        url: "http://localhost:8080/schedules",
+        url: "http://localhost:8080/schedule/page",
         type: "GET",
         dataType: "json",
+        success: function(data) {
+            printPageTab(data);
+            currentPage(pageNum);
+        },
+        error: function(e) {
+            alert(e.responseText);
+        }
+    });
+    loadSchedules(pageNum);
+}
+
+function printPageTab(size) {
+    $('ul#pageTab').empty();
+    var pageNum = Math.round(size/10);
+    for (let i = 1; i <= pageNum; i++) {
+        $('ul#pageTab').append('<li class="page-item" value="'+i+'">' +
+            '<a class="page-link" onclick="loadSchedules('+i+');currentPage('+i+');">'+i+'</a></li>');
+    }
+}
+
+function currentPage(num) {
+    $('li.page-item').removeClass("active");
+    $('li.page-item[value='+num+']').addClass("active");
+}
+
+function loadSchedules(pageNum) {
+    $.ajax({
+        url: "http://localhost:8080/schedule",
+        type: "GET",
+        dataType: "json",
+        data: { page: pageNum-1 },
         success: function(data) {
             addScheduleRow(data);
         },
         error: function(e) {
-            alert(e);
+            alert(e.responseText);
         }
     });
 }
@@ -108,7 +139,7 @@ function addScheduleRow(schedules) {
     $.each(schedules, function (i, item) {
         var newRow = $("<tr></tr>").appendTo(tableBody);
         $(newRow).append('<td><input class="form-check-input" name="scheduleId" type="checkbox" value="'+item.id+'"></td>');
-        $(newRow).append("<td>" + item.dateTime.substr(0, 10) + "</td>");
+        $(newRow).append("<td>" + item.dateTime.substr(0,16).replace('T',' ') + "</td>");
         $(newRow).append("<td>" + item.place + "</td>");
         $(newRow).append("<td>" + item.title + "</td>");
         if (item.personal === true) {
@@ -122,9 +153,35 @@ function addScheduleRow(schedules) {
     });
 }
 
-function showModifyScheduleModal(id) {
+function checkAll() {
+    if ($('input#checkAllBox').is(':checked')==false) {
+        $('input[name="scheduleId"]').prop('checked',false);
+    } else {
+        $('input[name="scheduleId"]').prop('checked',true);
+    }
+}
+
+function showModifyScheduleModal(scheduleId) {
+    $.ajax({
+        url: "http://localhost:8080/schedule/"+scheduleId,
+        type: "GET",
+        dataType: "json",
+        success: function(data) {
+            modifyScheduleModalDefaultValue(data)
+        },
+        error: function(request) {
+            alert(request.responseText);
+        }
+    });
     $('#modifyScheduleModal').modal('show');
-    $('#modifyScheduleForm > .modal-body').append("<input type=\"hidden\" name=\"id\" value=\""+id+"\">")
+}
+
+function modifyScheduleModalDefaultValue(schedule) {
+    $('input#m-title').val(schedule.title);
+    $('input#m-place').val(schedule.place);
+    $('input#m-dateTime').val(schedule.dateTime.substr(0, 16));
+    $('input#m-personal').prop('checked',schedule.personal);
+    $('#modifyScheduleForm > .modal-body').append('<input type="hidden" name="id" value="'+schedule.id+'">');
 }
 
 function loadCoupleState() {
@@ -239,9 +296,9 @@ function loadLover(callback) {
 
 function waitingComment(data) {
     $("div#loverStateResult")
-        .append("<p class=\"text-sm-start\">아직 "+data.name.toString()+"("+data.email.toString()+")" +
-            "님으로부터 승인을 대기중입니다. 상대방의 확인이 끝날 때 까지 기다려주세요.</p>" +
-            "\<a class=\"btn btn-outline-primary btn-sm\" type=\"button\" id=\"cancelPick\" onclick=\"cancelPick();\">취소하기</a>");
+        .append('<p class="text-sm-start">아직 '+data.name.toString()+'('+data.email.toString()+')' +
+            '님으로부터 승인을 대기중입니다. 상대방의 확인이 끝날 때 까지 기다려주세요.</p>' +
+            '<a class="btn btn-outline-secondary btn-sm" type="button" id="cancelPick" onclick="cancelPick();">취소하기</a>');
 }
 
 function cancelPick() {
@@ -260,5 +317,22 @@ function cancelPick() {
 }
 
 function matchedComment(data) {
-    $("div#loverStateResult").append("<p class=\"text-sm-start\">"+data.name.toString()+"("+data.email.toString()+")님과 짝꿍입니다!</p>");
+    $("div#loverStateResult").append('<p class="text-sm-start">'+data.name.toString()+'('+data.email.toString()+')님과 짝꿍입니다!</p>');
+    $("div#loverStateResult").append('<a class="btn btn-outline-secondary btn-sm" type="button" id="cancelLover" onclick="cancelLover();">취소하기</a>');
 }
+
+function cancelLover() {
+    $.ajax({
+        url: "http://localhost:8080/account/lover/cancel",
+        type: "POST",
+        dataType: "json",
+        success: function(data) {
+            alert("취소되었습니다.");
+            loadCoupleState();
+        },
+        error: function(request) {
+            alert(request.responseText);
+        }
+    });
+}
+

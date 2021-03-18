@@ -154,4 +154,13 @@ public class AccountService implements UserDetailsService {
         account.setLover(null);
         account.setLoverState(LoverState.NOTHING);
     }
+
+    public void cancelLover(UserAccount userAccount) {
+        Account account = getUserById(userAccount.getAccountId());
+        Account lover = account.getLover();
+        account.setLover(null);
+        account.setLoverState(LoverState.NOTHING);
+        lover.setLover(null);
+        lover.setLoverState(LoverState.NOTHING);
+    }
 }

@@ -6,6 +6,7 @@ import me.rumoredtuna.ngma.account.LoverState;
 import me.rumoredtuna.ngma.account.UserAccount;
 import me.rumoredtuna.ngma.config.exceptions.NotExistDataException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +34,15 @@ public class ScheduleService {
             return scheduleRepository.findAllByCouple(userAccount.getAccountId());
         } else {
             return scheduleRepository.findAllByOwner(userAccount.getAccountId());
+        }
+    }
+
+    public List<Schedule> getSchedules(UserAccount userAccount, Pageable pageable) {
+        if ( accountService.getUserById(userAccount.getAccountId()).getLoverState()
+                == LoverState.COUPLED) {
+            return scheduleRepository.findAllByCouple(userAccount.getAccountId(), pageable);
+        } else {
+            return scheduleRepository.findAllByOwner(userAccount.getAccountId(), pageable);
         }
     }
 

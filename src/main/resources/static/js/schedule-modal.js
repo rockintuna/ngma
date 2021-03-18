@@ -22,7 +22,8 @@ function submitScheduleForm(){
         data: JSON.stringify($("form#scheduleForm").serializeObject()),
         success: function(response){
             $("#newScheduleModal").modal('hide');
-            loadSchedules();
+            var pageNum = $('li.page-item.active').val();
+            printSchedules(pageNum);
         },
         error: function(e){
             alert(e.responseText);
@@ -39,7 +40,8 @@ function modifyScheduleForm(){
         data: JSON.stringify($("form#modifyScheduleForm").serializeObject()),
         success: function(response){
             $("#modifyScheduleModal").modal('hide');
-            loadSchedules();
+            var pageNum = $('li.page-item.active').val();
+            printSchedules(pageNum);
         },
         error: function(e){
             alert(e.responseText);
@@ -55,7 +57,8 @@ function removeScheduleForm(){
         cache:false,
         data: JSON.stringify(checkedSchedules()),
         success: function(response){
-            loadSchedules();
+            var pageNum = $('li.page-item.active').val();
+            printSchedules(pageNum);
         },
         error: function(e){
             alert(e.responseText);
@@ -68,5 +71,6 @@ function checkedSchedules() {
     $('input[name="scheduleId"]:checked').each(function(i){
         checkedSchedules.push($(this).val());
     });
+
     return checkedSchedules;
 }

@@ -83,4 +83,10 @@ public class AccountController {
         return ResponseEntity.ok().body("{}");
     }
 
+    @PostMapping("/lover/cancel")
+    @ResponseBody
+    public ResponseEntity<?> loverCancel(@AuthenticationPrincipal UserAccount userAccount) {
+        accountService.cancelLover(userAccount);
+        return ResponseEntity.ok("{}");
+    }
 }

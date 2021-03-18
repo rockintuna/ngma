@@ -2,6 +2,7 @@ package me.rumoredtuna.ngma.schedule;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.rumoredtuna.ngma.account.*;
+import me.rumoredtuna.ngma.config.exceptions.NotExistDataException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
@@ -86,7 +88,10 @@ class ScheduleControllerTest {
     @Test
     @WithUserDetails(value = "jilee@example.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     public void getSchedules() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/schedules")).andDo(print())
+        mvc.perform(MockMvcRequestBuilders.get("/schedule")
+                .param("page","0")
+                .param("size", "20"))
+                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(authenticated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -96,7 +101,8 @@ class ScheduleControllerTest {
     @Test
     @WithUserDetails(value = "sjlee@example.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     public void getOurSchedules() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/schedules")).andDo(print())
+        mvc.perform(MockMvcRequestBuilders.get("/schedule"))
+                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(authenticated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -117,7 +123,10 @@ class ScheduleControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk());
 
-        assertThat(scheduleService.getSchedule(3l).getTitle()).isEqualTo("meeting");
+        int size = scheduleRepository.findAll().size();
+        Long id = scheduleRepository.findAll().get(size-1).getId();
+
+        assertThat(scheduleService.getSchedule(id).getTitle()).isEqualTo("meeting");
     }
 
     @Test
@@ -148,15 +157,18 @@ class ScheduleControllerTest {
     @Test
     @WithUserDetails(value = "jilee@example.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     public void deleteSchedule() throws Exception {
-        Long[] scheduleIdList = new Long[2];
-        scheduleIdList[0] = 1L;
-        scheduleIdList[1] = 2L;
-        System.out.println(scheduleIdList);
+
+        Long id = scheduleRepository.findAll().get(0).getId();
+
+        Long[] scheduleIdList = new Long[1];
+        scheduleIdList[0] = id;
 
         mvc.perform(delete("/schedule")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Arrays.toString(scheduleIdList)))
                 .andDo(print())
                 .andExpect(status().isOk());
+
+        assertThrows(NotExistDataException.class, () -> scheduleService.getSchedule(id));
     }
 }

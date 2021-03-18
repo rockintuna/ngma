@@ -53,7 +53,7 @@
               </div>
               <div sec:authorize="isAuthenticated()">
                 <li class="nav-item">
-                  <a class="nav-link" type="button" id="schedules" onclick="fetchPageToMain('/main-part/schedules-main.html');loadSchedules()">일정</a>
+                  <a class="nav-link" type="button" id="schedules" onclick="fetchPageToMain('/main-part/schedules-main.html');printSchedules(1)">일정</a>
                 </li>
               </div>
               <div sec:authorize="isAuthenticated()">
