@@ -38,7 +38,7 @@ source C:\Users\Jeong In Lee\Downloads\timezone_2021a_leaps_sql/timezone_leaps.s
 
 **git clone으로 git 저장소 불러오기**
 ```
-$ git clone https://github.com/cyr9210/Notice-Project.git
+$ git clone https://github.com/rockintuna/ngma.git
 Cloning into 'ngma'...
 remote: Enumerating objects: 138, done.
 remote: Counting objects: 100% (138/138), done.
