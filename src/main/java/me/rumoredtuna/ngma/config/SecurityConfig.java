@@ -1,7 +1,6 @@
 package me.rumoredtuna.ngma.config;
 
 import me.rumoredtuna.ngma.account.AccountService;
-import me.rumoredtuna.ngma.account.MyOAuth2UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;

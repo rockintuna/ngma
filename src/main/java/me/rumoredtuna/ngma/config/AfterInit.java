@@ -3,7 +3,6 @@ package me.rumoredtuna.ngma.config;
 import me.rumoredtuna.ngma.account.Account;
 import me.rumoredtuna.ngma.account.AccountDto;
 import me.rumoredtuna.ngma.account.AccountService;
-import me.rumoredtuna.ngma.account.UserAccount;
 import me.rumoredtuna.ngma.schedule.Schedule;
 import me.rumoredtuna.ngma.schedule.ScheduleRepository;
 import me.rumoredtuna.ngma.schedule.ScheduleService;

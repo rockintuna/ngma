@@ -14,14 +14,12 @@ import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserServ
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpSession;
-import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -36,9 +34,6 @@ public class AccountService implements UserDetailsService, OAuth2UserService<OAu
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private HttpSession httpSession;
 
 
     @Override
@@ -178,30 +173,24 @@ public class AccountService implements UserDetailsService, OAuth2UserService<OAu
     @Override
     public UserAccount loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
 
-        OAuth2UserService delegate = new DefaultOAuth2UserService();
-        OAuth2User oAuth2User = delegate.loadUser(oAuth2UserRequest);
+        OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
+        Map<String, Object> attributes = delegate.loadUser(oAuth2UserRequest).getAttributes();
 
-        String registrationId = oAuth2UserRequest.getClientRegistration().getRegistrationId();
         String userNameAttributeName = oAuth2UserRequest.getClientRegistration()
                 .getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
 
-
-        OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
-
-        Account account = saveOrGet(attributes);
-        httpSession.setAttribute("user", new SessionAccount(account));
-
         return new UserAccount(
-                List.of(new SimpleGrantedAuthority("ROLE_"+account.getRole()))
-                , attributes.getAttributes()
-                , attributes.getNameAttributeKey()
-                , account);
+                attributes
+                , userNameAttributeName
+                , getAccountByOAuthAttributes(attributes));
     }
 
-    private Account saveOrGet(OAuthAttributes attributes) {
-        Optional<Account> account = accountRepository.findByEmail(attributes.getEmail());
+    private Account getAccountByOAuthAttributes(Map<String, Object> attributes) {
+        String email = (String) attributes.get("email");
+        Optional<Account> account = accountRepository.findByEmail(email);
+
         if ( account.isEmpty() ) {
-            return accountRepository.save(attributes.toEntity());
+            return accountRepository.save(new Account(attributes));
         } else {
             return account.get();
         }

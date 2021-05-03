@@ -10,6 +10,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Getter
@@ -35,6 +36,14 @@ public class Account {
         this.email = accountDto.getEmail();
         this.password = accountDto.getPassword();
         this.name = accountDto.getName();
+        this.role = "USER";
+        this.loverState = LoverState.NOTHING;
+    }
+
+    public Account(Map<String, Object> attributes) {
+        this.email = (String) attributes.get("email");
+        this.name = (String) attributes.get("name");
+        this.role = "USER";
         this.loverState = LoverState.NOTHING;
     }
 

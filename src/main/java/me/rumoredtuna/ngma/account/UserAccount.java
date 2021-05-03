@@ -10,16 +10,14 @@ import java.util.*;
 
 public class UserAccount extends User implements OAuth2User {
 
-    private Account account;
+    private final Account account;
 
-    private Collection<? extends GrantedAuthority> authorities;
     private Map<String, Object> attributes;
     private String nameAttributeKey;
 
-    public UserAccount(Collection<? extends GrantedAuthority> authorities, Map<String, Object> attributes, String nameAttributeKey, Account account) {
+    public UserAccount(Map<String, Object> attributes, String nameAttributeKey, Account account) {
         super(account.getEmail(),"googleOauth2",
                 List.of(new SimpleGrantedAuthority("ROLE_"+account.getRole())));
-        this.authorities = authorities;
         this.attributes = attributes;
         this.nameAttributeKey = nameAttributeKey;
         this.account = account;
@@ -51,6 +49,6 @@ public class UserAccount extends User implements OAuth2User {
 
     @Override
     public String getName() {
-        return account.getName();
+        return account.getEmail();
     }
 }

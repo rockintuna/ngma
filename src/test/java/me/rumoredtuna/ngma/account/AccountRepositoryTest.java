@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 
 @DataJpaTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
