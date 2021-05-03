@@ -26,7 +26,7 @@
       }
     </style>
 
-    
+
     <!-- Custom styles for this template -->
     <link rel="stylesheet" type="text/css" th:href="@{/css/sticky-footer-navbar.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{/css/form-validation.css}"/>
@@ -71,6 +71,11 @@
                   <a class="nav-link" type="button" href="http://localhost:8080/login">로그인</a>
                 </li>
               </div>
+<!--              <div sec:authorize="!isAuthenticated()">-->
+<!--                <li class="nav-item">-->
+<!--                  <a class="nav-link" type="button" href="http://localhost:8080/oauth2/authorization/google">Google</a>-->
+<!--                </li>-->
+<!--              </div>-->
               <div sec:authorize="!isAuthenticated()">
                 <li class="nav-item">
                   <a class="nav-link" type="button" id="register" onclick="fetchPageToMain('/main-part/register-account-main.html')">회원 가입</a>
@@ -93,6 +98,7 @@
           <p class="lead">당장 어떤 것을 잊고 싶다면, 기억할 수 있게 적어 두어라.<br>
             - Edgar Allan Poe</p>
       </div>
+
     </main>
 
     <footer class="footer mt-auto py-3 bg-light">
@@ -106,5 +112,6 @@
     <script src="/js/ngma.js"></script>
     <script src="/js/schedule-modal.js"></script>
     <script src="/js/couple-modal.js"></script>
+
   </body>
 </html>

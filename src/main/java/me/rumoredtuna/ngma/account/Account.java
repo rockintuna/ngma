@@ -24,7 +24,6 @@ public class Account {
     @NotNull
     private String email;
 
-    @NotNull
     @JsonIgnore
     private String password;
 
@@ -72,11 +71,4 @@ public class Account {
         this.password = passwordEncoder.encode(password);
     }
 
-    @JsonIgnore
-    public String getAccessToken() {
-        if (password == null) {
-            return "";
-        }
-        return password.substring(0, 10);
-    }
 }

@@ -1,5 +1,8 @@
 package me.rumoredtuna.ngma.config;
 
+import me.rumoredtuna.ngma.account.AccountService;
+import me.rumoredtuna.ngma.account.MyOAuth2UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,14 +20,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
+    @Autowired
+    private AccountService accountService;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/","/info","/account","/login").permitAll()
+                .antMatchers("/","/info","/account","/login/*").permitAll()
                 .anyRequest().authenticated()
                 .and().formLogin().defaultSuccessUrl("/")
                 .and().logout().logoutSuccessUrl("/")
-                .and().httpBasic();
+                .and().httpBasic()
+                .and().oauth2Login().userInfoEndpoint().userService(accountService);
 
         http.csrf().disable();
     }

@@ -29,6 +29,7 @@ public class ScheduleService {
     }
 
     public List<Schedule> getSchedules(UserAccount userAccount) {
+        System.out.println(userAccount);
         if ( accountService.getUserById(userAccount.getAccountId()).getLoverState()
                 == LoverState.COUPLED) {
             return scheduleRepository.findAllByCouple(userAccount.getAccountId());
