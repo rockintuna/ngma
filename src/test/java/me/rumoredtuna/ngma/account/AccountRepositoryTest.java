@@ -25,7 +25,7 @@ class AccountRepositoryTest {
         AccountDto accountDto = new AccountDto();
         accountDto.setPassword("jilee");
         accountDto.setEmail("jilee@example.com");
-        Account account = new Account(accountDto);
+        Account account = Account.from(accountDto);
         accountRepository.save(account);
     }
 
@@ -33,7 +33,7 @@ class AccountRepositoryTest {
     public void test() {
         Account account = accountRepository.findByEmail("jilee@example.com").orElse(null);
 
-        account.setLoverState(LoverState.COUPLED);
+        account.changeLoverState(LoverState.COUPLED);
         accountRepository.save(account);
         entityManager.flush();
         System.out.println(account.getLoverState());

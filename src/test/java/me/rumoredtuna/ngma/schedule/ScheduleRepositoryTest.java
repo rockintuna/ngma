@@ -33,7 +33,7 @@ class ScheduleRepositoryTest {
         AccountDto accountDto = new AccountDto();
         accountDto.setEmail("jilee@example.com");
         accountDto.setPassword("jilee");
-        Account account = new Account(accountDto);
+        Account account = Account.from(accountDto);
         accountRepository.save(account);
 
         Schedule schedule = new Schedule();

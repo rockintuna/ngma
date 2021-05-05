@@ -59,14 +59,14 @@ public class AccountController {
     public ResponseEntity<?> pick(@AuthenticationPrincipal UserAccount userAccount,
                                   @RequestBody AccountDto accountDto) {
         accountService.pickLover(userAccount, accountDto.getEmail());
-        return ResponseEntity.ok().body("{}");
+        return ResponseEntity.ok("{}");
     }
 
     @PostMapping("/pick/cancel")
     @ResponseBody
     public ResponseEntity<?> cancelPick(@AuthenticationPrincipal UserAccount userAccount) {
         accountService.cancelPick(userAccount);
-        return ResponseEntity.ok().body("{}");
+        return ResponseEntity.ok("{}");
     }
 
     @PostMapping("/waiter/{id}")
@@ -80,7 +80,7 @@ public class AccountController {
         } else {
             throw new InvalidParameterException(param);
         }
-        return ResponseEntity.ok().body("{}");
+        return ResponseEntity.ok("{}");
     }
 
     @PostMapping("/lover/cancel")

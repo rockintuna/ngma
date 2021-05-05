@@ -1,9 +1,9 @@
 package me.rumoredtuna.ngma.account;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
@@ -14,7 +14,6 @@ import java.util.Map;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 public class Account {
 
@@ -32,28 +31,6 @@ public class Account {
 
     private String role;
 
-    public Account(AccountDto accountDto) {
-        this.email = accountDto.getEmail();
-        this.password = accountDto.getPassword();
-        this.name = accountDto.getName();
-        this.role = "USER";
-        this.loverState = LoverState.NOTHING;
-    }
-
-    public Account(Map<String, Object> attributes) {
-        this.email = (String) attributes.get("email");
-        this.name = (String) attributes.get("name");
-        this.role = "USER";
-        this.loverState = LoverState.NOTHING;
-    }
-
-    @Override
-    public String toString() {
-        return "Account{" +
-                ", email ='" + email + '\'' +
-                '}';
-    }
-
     @OneToOne
     @JsonIgnore
     @JoinColumn(name = "lover_id")
@@ -66,6 +43,71 @@ public class Account {
 
     @Enumerated(EnumType.STRING)
     private LoverState loverState;
+
+    @Builder
+    private Account(Long id, String email, String password, String name, String role, Account lover, List<Account> waiters, LoverState loverState) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.role = role;
+        this.lover = lover;
+        this.waiters = waiters;
+        this.loverState = loverState;
+    }
+
+    public static Account from(AccountDto accountDto) {
+        return Account.builder()
+                .email(accountDto.getEmail())
+                .password(accountDto.getPassword())
+                .name(accountDto.getName())
+                .role("USER")
+                .loverState(LoverState.NOTHING)
+                .build();
+    }
+
+    public static Account ofGoogle(Map<String, Object> attributes) {
+        return Account.builder()
+                .email(attributes.get("email").toString())
+                .name(attributes.get("name").toString())
+                .role("USER")
+                .loverState(LoverState.NOTHING)
+                .build();
+    }
+
+    public void changeLover(Account lover) {
+        this.lover = lover;
+    }
+
+    public void changeLoverState(LoverState loverState) {
+        this.loverState = loverState;
+    }
+
+    public void deregisterLover() {
+        changeLover(null);
+        changeLoverState(LoverState.NOTHING);
+    }
+
+    public void waitingFor(Account lover) {
+        changeLover(lover);
+        changeLoverState(LoverState.WAITING);
+    }
+
+    public void clearWaiters() {
+        List<Account> waiterList = getWaiters();
+        for (Account waiter : waiterList) {
+            waiter.deregisterLover();
+        }
+        waiterList.clear();
+        setLoverStateHasWaiters(false);
+    }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                ", email ='" + email + '\'' +
+                '}';
+    }
 
     public void modifyByDto(AccountDto accountDto) {
         this.password = accountDto.getPassword();

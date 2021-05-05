@@ -65,10 +65,10 @@ class ScheduleControllerTest {
         account2.setPassword("sjlee123");
         Account lover = accountService.registerAccount(account2);
 
-        newAccount.setLover(lover);
-        lover.setLover(newAccount);
-        newAccount.setLoverState(LoverState.COUPLED);
-        lover.setLoverState(LoverState.COUPLED);
+        newAccount.changeLover(lover);
+        lover.changeLover(newAccount);
+        newAccount.changeLoverState(LoverState.COUPLED);
+        lover.changeLoverState(LoverState.COUPLED);
 
         Schedule schedule1 = new Schedule();
         schedule1.setTitle("book");

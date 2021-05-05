@@ -156,8 +156,8 @@ class AccountControllerTest {
     public void showLover() throws Exception {
         Account account = accountService.getUserByEmail("jilee@example.com");
         Account lover = accountService.getUserByEmail("sjlee@example.com");
-        account.setLover(lover);
-        account.setLoverState(LoverState.WAITING);
+        account.changeLover(lover);
+        account.changeLoverState(LoverState.WAITING);
         lover.getWaiters().add(account);
         lover.setLoverStateHasWaiters(true);
 
@@ -173,10 +173,10 @@ class AccountControllerTest {
     public void showCouple() throws Exception {
         Account account = accountService.getUserByEmail("jilee@example.com");
         Account lover = accountService.getUserByEmail("sjlee@example.com");
-        account.setLover(lover);
-        lover.setLover(account);
-        account.setLoverState(LoverState.COUPLED);
-        lover.setLoverState(LoverState.COUPLED);
+        account.changeLover(lover);
+        lover.changeLover(account);
+        account.changeLoverState(LoverState.COUPLED);
+        lover.changeLoverState(LoverState.COUPLED);
 
         mvc.perform(MockMvcRequestBuilders.get("/account/lover"))
                 .andDo(print())
@@ -214,8 +214,8 @@ class AccountControllerTest {
     public void getLoverStateNoWaiterWaiting() throws Exception {
         Account account = accountService.getUserByEmail("jilee@example.com");
         Account lover = accountService.getUserByEmail("sjlee@example.com");
-        account.setLover(lover);
-        account.setLoverState(LoverState.WAITING);
+        account.changeLover(lover);
+        account.changeLoverState(LoverState.WAITING);
         lover.getWaiters().add(account);
         lover.setLoverStateHasWaiters(true);
 
@@ -232,8 +232,8 @@ class AccountControllerTest {
     public void getLoverStateHasWaiterNothing() throws Exception {
         Account account = accountService.getUserByEmail("jilee@example.com");
         Account lover = accountService.getUserByEmail("sjlee@example.com");
-        lover.setLover(account);
-        lover.setLoverState(LoverState.WAITING);
+        lover.changeLover(account);
+        lover.changeLoverState(LoverState.WAITING);
         account.getWaiters().add(lover);
         account.setLoverStateHasWaiters(true);
 
@@ -250,12 +250,12 @@ class AccountControllerTest {
     public void getLoverStateHasWaiterWaiting() throws Exception {
         Account account = accountService.getUserByEmail("jilee@example.com");
         Account lover = accountService.getUserByEmail("sjlee@example.com");
-        account.setLover(lover);
-        account.setLoverState(LoverState.WAITING);
+        account.changeLover(lover);
+        account.changeLoverState(LoverState.WAITING);
         lover.getWaiters().add(account);
         lover.setLoverStateHasWaiters(true);
-        lover.setLover(account);
-        lover.setLoverState(LoverState.WAITING);
+        lover.changeLover(account);
+        lover.changeLoverState(LoverState.WAITING);
         account.getWaiters().add(lover);
         account.setLoverStateHasWaiters(true);
 
@@ -272,10 +272,10 @@ class AccountControllerTest {
     public void getLoverStateCoupled() throws Exception {
         Account account = accountService.getUserByEmail("jilee@example.com");
         Account lover = accountService.getUserByEmail("sjlee@example.com");
-        account.setLover(lover);
-        lover.setLover(account);
-        account.setLoverState(LoverState.COUPLED);
-        lover.setLoverState(LoverState.COUPLED);
+        account.changeLover(lover);
+        lover.changeLover(account);
+        account.changeLoverState(LoverState.COUPLED);
+        lover.changeLoverState(LoverState.COUPLED);
 
         mvc.perform(MockMvcRequestBuilders.get("/account/loverState"))
                 .andDo(print())
@@ -334,8 +334,8 @@ class AccountControllerTest {
     public void cancelpick() throws Exception {
         Account account = accountService.getUserByEmail("jilee@example.com");
         Account lover = accountService.getUserByEmail("sjlee@example.com");
-        lover.setLover(account);
-        lover.setLoverState(LoverState.WAITING);
+        lover.changeLover(account);
+        lover.changeLoverState(LoverState.WAITING);
         account.getWaiters().add(lover);
         account.setLoverStateHasWaiters(true);
 
@@ -352,8 +352,8 @@ class AccountControllerTest {
     public void confirmWaiter() throws Exception {
         Account lover = accountService.getUserByEmail("sjlee@example.com");
         Account account = accountService.getUserByEmail("jilee@example.com");
-        lover.setLover(account);
-        lover.setLoverState(LoverState.WAITING);
+        lover.changeLover(account);
+        lover.changeLoverState(LoverState.WAITING);
         account.getWaiters().add(lover);
         account.setLoverStateHasWaiters(true);
 
@@ -377,8 +377,8 @@ class AccountControllerTest {
     public void rejectWaiter() throws Exception {
         Account lover = accountService.getUserByEmail("sjlee@example.com");
         Account account = accountService.getUserByEmail("jilee@example.com");
-        lover.setLover(account);
-        lover.setLoverState(LoverState.WAITING);
+        lover.changeLover(account);
+        lover.changeLoverState(LoverState.WAITING);
         account.getWaiters().add(lover);
         account.setLoverStateHasWaiters(true);
 
@@ -401,10 +401,10 @@ class AccountControllerTest {
     public void cancelLover() throws Exception {
         Account account = accountService.getUserByEmail("jilee@example.com");
         Account lover = accountService.getUserByEmail("sjlee@example.com");
-        account.setLover(lover);
-        lover.setLover(account);
-        account.setLoverState(LoverState.COUPLED);
-        lover.setLoverState(LoverState.COUPLED);
+        account.changeLover(lover);
+        lover.changeLover(account);
+        account.changeLoverState(LoverState.COUPLED);
+        lover.changeLoverState(LoverState.COUPLED);
 
         mvc.perform(post("/account/lover/cancel"))
                 .andDo(print())

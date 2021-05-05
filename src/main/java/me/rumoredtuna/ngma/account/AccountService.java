@@ -5,7 +5,6 @@ import me.rumoredtuna.ngma.config.exceptions.PickMySelfException;
 import me.rumoredtuna.ngma.config.exceptions.UsedEmailException;
 import me.rumoredtuna.ngma.schedule.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -48,8 +47,7 @@ public class AccountService implements UserDetailsService, OAuth2UserService<OAu
         checkPasswordIsNullOrShort(accountDto);
 
         if ( accountRepository.findByEmail(accountDto.getEmail()).isEmpty() ) {
-            Account account = new Account(accountDto);
-            account.setRole("USER");
+            Account account = Account.from(accountDto);
             account.encodePassword(passwordEncoder);
             return accountRepository.save(account);
         } else {
@@ -75,11 +73,10 @@ public class AccountService implements UserDetailsService, OAuth2UserService<OAu
 
     public void deleteAccount(UserAccount userAccount) {
         Account account = getUserById(userAccount.getAccountId());
-        if ( account.getLoverState() == LoverState.COUPLED ) {
-            account.getLover().setLover(null);
-            account.getLover().setLoverState(LoverState.NOTHING);
+        if ( account.getLoverState().equals(LoverState.COUPLED) ) {
+            account.getLover().deregisterLover();
         }
-        clearWaiter(account);
+        account.clearWaiters();
         scheduleService.clearSchedule(account);
         accountRepository.deleteById(userAccount.getAccountId());
     }
@@ -105,8 +102,7 @@ public class AccountService implements UserDetailsService, OAuth2UserService<OAu
         Account account = getUserById(userAccount.getAccountId());
         Account lover = accountRepository.findByEmail(loverEmail)
                 .orElseThrow(() -> new UsernameNotFoundException(loverEmail));
-        account.setLover(lover);
-        account.setLoverState(LoverState.WAITING);
+        account.waitingFor(lover);
         lover.getWaiters().add(account);
         lover.setLoverStateHasWaiters(true);
     }
@@ -130,44 +126,32 @@ public class AccountService implements UserDetailsService, OAuth2UserService<OAu
         Account account = getUserById(userAccount.getAccountId());
         Account waiter = getUserById(waiterId);
         account.getWaiters().remove(waiter);
-        waiter.setLover(null);
-        waiter.setLoverState(LoverState.NOTHING);
+        waiter.deregisterLover();
     }
 
     public void confirmWaiter(UserAccount userAccount, Long waiterId) {
         Account account = getUserById(userAccount.getAccountId());
         Account waiter = getUserById(waiterId);
-        account.setLover(waiter);
-        account.setLoverState(LoverState.COUPLED);
-        waiter.setLoverState(LoverState.COUPLED);
-        account.getWaiters().remove(waiter);
-        clearWaiter(account);
-        clearWaiter(waiter);
-    }
 
-    public void clearWaiter(Account account) {
-        List<Account> waiterList = account.getWaiters();
-        for (Account waiter : waiterList) {
-            waiter.setLover(null);
-            waiter.setLoverState(LoverState.NOTHING);
-        }
-        waiterList.clear();
-        account.setLoverStateHasWaiters(false);
+        account.changeLover(waiter);
+        account.changeLoverState(LoverState.COUPLED);
+        waiter.changeLoverState(LoverState.COUPLED);
+
+        account.getWaiters().remove(waiter);
+        account.clearWaiters();
+        waiter.clearWaiters();
     }
 
     public void cancelPick(UserAccount userAccount) {
         Account account = getUserById(userAccount.getAccountId());
-        account.setLover(null);
-        account.setLoverState(LoverState.NOTHING);
+        account.deregisterLover();
     }
 
     public void cancelLover(UserAccount userAccount) {
         Account account = getUserById(userAccount.getAccountId());
         Account lover = account.getLover();
-        account.setLover(null);
-        account.setLoverState(LoverState.NOTHING);
-        lover.setLover(null);
-        lover.setLoverState(LoverState.NOTHING);
+        account.deregisterLover();
+        lover.deregisterLover();
     }
 
     @Override
@@ -190,7 +174,7 @@ public class AccountService implements UserDetailsService, OAuth2UserService<OAu
         Optional<Account> account = accountRepository.findByEmail(email);
 
         if ( account.isEmpty() ) {
-            return accountRepository.save(new Account(attributes));
+            return accountRepository.save(Account.ofGoogle(attributes));
         } else {
             return account.get();
         }

@@ -1,12 +1,11 @@
 package me.rumoredtuna.ngma.account;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 public class UserAccount extends User implements OAuth2User {
 
@@ -23,10 +22,6 @@ public class UserAccount extends User implements OAuth2User {
         this.account = account;
     }
 
-    public Account getAccount() {
-        return account;
-    }
-
     public UserAccount(Account account) {
         super(account.getEmail(),
                 account.getPassword(),
@@ -34,21 +29,21 @@ public class UserAccount extends User implements OAuth2User {
         this.account = account;
     }
 
-    public Long getAccountId() {
-        return account.getId();
-    }
-
     @Override
     public Map<String, Object> getAttributes() {
-        if (this.attributes == null) {
-            this.attributes = new HashMap<>();
-            this.attributes.put(this.nameAttributeKey, this.getName());
-        }
         return attributes;
     }
 
     @Override
     public String getName() {
-        return account.getEmail();
+        return this.attributes.get(this.nameAttributeKey).toString();
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public Long getAccountId() {
+        return account.getId();
     }
 }
